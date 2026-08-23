@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --background: 225 42% 6%;
+  --foreground: 220 28% 96%;
+  --card: 225 35% 10%;
+  --card-foreground: 220 28% 96%;
+  --primary: 235 89% 74%;
+  --primary-foreground: 228 45% 8%;
+  --secondary: 216 34% 17%;
+  --secondary-foreground: 220 28% 96%;
+  --muted: 220 29% 13%;
+  --muted-foreground: 220 14% 70%;
+  --accent: 199 94% 67%;
+  --accent-foreground: 225 45% 8%;
+  --destructive: 350 79% 64%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 222 27% 20%;
+  --input: 222 27% 20%;
+  --ring: 235 89% 74%;
+  --radius: 0.5rem;
+}
+
+* {
+  @apply border-border;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply min-h-screen bg-background text-foreground antialiased;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(129, 140, 248, 0.18), transparent 28rem),
+    radial-gradient(circle at 78% 8%, rgba(56, 189, 248, 0.12), transparent 24rem),
+    linear-gradient(180deg, #080b16 0%, #0d1221 52%, #101421 100%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(129, 140, 248, 0.35);
+}
+
+.glass-panel {
+  @apply border border-white/10 bg-white/[0.045] shadow-2xl shadow-black/20 backdrop-blur-xl transition duration-300;
+}
+
+.motion-card {
+  @apply transition duration-300 hover:-translate-y-1 hover:border-indigo-200/35 hover:bg-white/[0.065];
+}
+
+.soft-button {
+  @apply transition duration-200 hover:-translate-y-0.5 active:translate-y-0;
+}
+
+.calm-ring {
+  box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.16), 0 18px 60px rgba(15, 23, 42, 0.42);
+}
+
+.grid-fade {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, black, transparent 82%);
+}
+
+.animated-sheen {
+  background: linear-gradient(110deg, transparent 0%, rgba(129, 140, 248, 0.16) 28%, rgba(56, 189, 248, 0.14) 50%, transparent 74%);
+  background-size: 240% 100%;
+}
+
+.floating-strip {
+  @apply pointer-events-none absolute rounded-md border border-white/10 bg-white/[0.045] backdrop-blur-md;
+}
+
+.stagger-1 {
+  animation-delay: .08s;
+}
+
+.stagger-2 {
+  animation-delay: .16s;
+}
+
+.stagger-3 {
+  animation-delay: .24s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
