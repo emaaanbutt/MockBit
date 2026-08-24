@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const protectedPrefixes = ["/setup", "/interview", "/history", "/report"];
+const protectedPrefixes = ["/dashboard", "/setup", "/interview", "/history", "/report", "/reminders"];
 const authPrefixes = ["/login", "/signup"];
 const protectedApiPrefixes = ["/api/analyze-transcript"];
 
@@ -48,7 +48,7 @@ export async function middleware(request: NextRequest) {
 
   if (user && isMatch(pathname, authPrefixes)) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/history";
+    redirectUrl.pathname = "/dashboard";
     redirectUrl.search = "";
     return NextResponse.redirect(redirectUrl);
   }

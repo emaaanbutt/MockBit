@@ -39,6 +39,7 @@ body {
     radial-gradient(circle at 78% 8%, rgba(56, 189, 248, 0.12), transparent 24rem),
     linear-gradient(180deg, #080b16 0%, #0d1221 52%, #101421 100%);
   background-attachment: fixed;
+  overflow-x: hidden;
 }
 
 ::selection {

@@ -15,16 +15,13 @@ export function TopNav() {
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           <Button asChild variant="ghost" size="sm">
-            <Link href="/history">History</Link>
+            <Link href="/#features">Features</Link>
           </Button>
           <Button asChild variant="ghost" size="sm">
-            <Link href="/setup">Setup</Link>
+            <Link href="/#flow">How it works</Link>
           </Button>
           <Button asChild variant="ghost" size="sm">
-            <Link href="/interview">Interview</Link>
-          </Button>
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/report/demo">Report</Link>
+            <Link href="/#contact">Contact</Link>
           </Button>
         </nav>
         <AuthNav />

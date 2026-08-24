@@ -1,13 +1,14 @@
-import { InterviewConsole } from "@/components/interview/interview-console";
-import { TopNav } from "@/components/shared/top-nav";
+import { InterviewPicker } from "@/components/interview/interview-picker";
+import { AppShell } from "@/components/app/app-shell";
 
 export default function InterviewPage() {
   return (
-    <main>
-      <TopNav />
-      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <InterviewConsole />
-      </section>
-    </main>
+    <AppShell
+      active="interview"
+      title="Practice Room"
+      subtitle="Choose an upcoming interview first. Each practice room is tailored to that role, company, and job description."
+    >
+      <InterviewPicker />
+    </AppShell>
   );
 }

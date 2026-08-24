@@ -36,9 +36,7 @@ export default function HomePage() {
       <TopNav />
       <section className="relative overflow-hidden">
         <div className="grid-fade absolute inset-0" />
-        <div className="floating-strip left-[7%] top-24 hidden h-16 w-32 animate-floatPanel md:block" />
-        <div className="floating-strip right-[9%] top-40 hidden h-12 w-44 animate-floatPanel stagger-2 lg:block" />
-        <div className="floating-strip bottom-20 left-[42%] hidden h-10 w-56 animate-drift xl:block" />
+        <div className="floating-strip right-[5%] top-28 hidden h-12 w-44 animate-floatPanel stagger-2 xl:block" />
         <div className="relative mx-auto grid min-h-[calc(100vh-64px)] max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:px-8">
           <div className="animate-slideUp">
             <Badge tone="indigo">Real-Time Voice AI Interviewer</Badge>
@@ -51,13 +49,13 @@ export default function HomePage() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
-                <Link href="/setup">
+                <Link href="/login?next=%2Fdashboard">
                   Start a Mock Interview
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/history">View History</Link>
+                <Link href="#flow">See how it works</Link>
               </Button>
             </div>
             <div className="mt-8 grid max-w-xl grid-cols-2 gap-3 text-sm sm:grid-cols-4">
@@ -105,7 +103,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      <section className="mx-auto grid max-w-7xl gap-4 px-4 py-10 sm:px-6 md:grid-cols-3 lg:px-8">
+      <section id="features" className="mx-auto grid max-w-7xl scroll-mt-24 gap-4 px-4 py-10 sm:px-6 md:grid-cols-3 lg:px-8">
         {features.map((feature, index) => (
           <Card key={feature.title} className="glass-panel animate-slideUp" style={{ animationDelay: `${index * 0.08}s` }}>
             <CardHeader>
@@ -116,7 +114,7 @@ export default function HomePage() {
           </Card>
         ))}
       </section>
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section id="flow" className="mx-auto max-w-7xl scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-5 lg:grid-cols-[.9fr_1.1fr]">
           <div className="rounded-lg border border-indigo-200/15 bg-indigo-300/10 p-6">
             <Sparkles className="mb-4 h-5 w-5 text-indigo-100" />
@@ -126,7 +124,7 @@ export default function HomePage() {
               your delivery is getting sharper week by week.
             </p>
             <Button asChild className="mt-6" variant="secondary">
-              <Link href="/signup">Create Account</Link>
+              <Link href="/signup?next=%2Fdashboard">Create Account</Link>
             </Button>
           </div>
           <div className="grid gap-4 md:grid-cols-3">
@@ -146,19 +144,19 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+      <section id="contact" className="mx-auto max-w-7xl scroll-mt-24 px-4 pb-16 sm:px-6 lg:px-8">
         <div className="overflow-hidden rounded-lg border border-white/10 bg-slate-950/45">
           <div className="animated-sheen animate-shimmer h-1" />
           <div className="grid gap-6 p-6 md:grid-cols-[1fr_auto] md:items-center">
             <div>
-              <h2 className="text-2xl font-semibold">Ready to run your first practice round?</h2>
+              <h2 className="text-2xl font-semibold">Ready to organize your next interview?</h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
-                Start with a job description, select regional context, and jump into the live interview room.
+                Create an account, add your interview date, and practice with role-specific voice sessions before the real day.
               </p>
             </div>
             <Button asChild>
-              <Link href="/setup">
-                Open Setup
+              <Link href="/login?next=%2Fdashboard">
+                Open MockBit
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>

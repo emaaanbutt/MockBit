@@ -43,9 +43,9 @@ export function AuthNav() {
     return (
       <div className="flex items-center gap-2">
         <Button asChild size="sm">
-          <Link href="/setup">
+          <Link href="/dashboard">
             <BrainCircuit className="h-4 w-4" />
-            Start
+            Dashboard
           </Link>
         </Button>
         <Button onClick={signOut} disabled={isPending} variant="outline" size="sm" className="hidden sm:inline-flex">
@@ -70,7 +70,7 @@ export function AuthNav() {
         </Link>
       </Button>
       <Button asChild size="sm">
-        <Link href="/login?next=%2Fsetup">
+        <Link href="/login?next=%2Fdashboard">
           <BrainCircuit className="h-4 w-4" />
           Start
         </Link>

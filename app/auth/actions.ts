@@ -11,9 +11,9 @@ function getString(formData: FormData, key: string) {
 }
 
 function safeNext(next: string) {
-  if (!next.startsWith("/")) return "/history";
-  if (next.startsWith("//")) return "/history";
-  if (next.startsWith("/login") || next.startsWith("/signup")) return "/history";
+  if (!next.startsWith("/")) return "/dashboard";
+  if (next.startsWith("//")) return "/dashboard";
+  if (next.startsWith("/login") || next.startsWith("/signup")) return "/dashboard";
   return next;
 }
 
@@ -26,7 +26,7 @@ function authRedirect(path: "/login" | "/signup", messageType: "error" | "messag
 export async function login(formData: FormData) {
   const email = getString(formData, "email");
   const password = getString(formData, "password");
-  const next = safeNext(getString(formData, "next") || "/history");
+  const next = safeNext(getString(formData, "next") || "/dashboard");
 
   if (!email || !password) {
     authRedirect("/login", "error", "Please enter both email and password.", next);
@@ -47,7 +47,7 @@ export async function signup(formData: FormData) {
   const name = getString(formData, "name");
   const email = getString(formData, "email");
   const password = getString(formData, "password");
-  const next = safeNext(getString(formData, "next") || "/history");
+  const next = safeNext(getString(formData, "next") || "/dashboard");
 
   if (!name || !email || !password) {
     authRedirect("/signup", "error", "Please fill in name, email, and password.", next);

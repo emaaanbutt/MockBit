@@ -12,7 +12,7 @@ type AuthFormProps = {
   next?: string;
 };
 
-export function AuthForm({ mode, error, message, next = "/history" }: AuthFormProps) {
+export function AuthForm({ mode, error, message, next = "/dashboard" }: AuthFormProps) {
   const isSignup = mode === "signup";
 
   return (
