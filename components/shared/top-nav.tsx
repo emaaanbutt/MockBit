@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { BrainCircuit, LogIn, Mic2 } from "lucide-react";
+import { Mic2 } from "lucide-react";
+import { AuthNav } from "@/components/shared/auth-nav";
 import { Button } from "@/components/ui/button";
 
 export function TopNav() {
@@ -26,20 +27,7 @@ export function TopNav() {
             <Link href="/report/demo">Report</Link>
           </Button>
         </nav>
-        <div className="flex items-center gap-2">
-          <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
-            <Link href="/login">
-              <LogIn className="h-4 w-4" />
-              Login
-            </Link>
-          </Button>
-          <Button asChild size="sm">
-            <Link href="/setup">
-              <BrainCircuit className="h-4 w-4" />
-              Start
-            </Link>
-          </Button>
-        </div>
+        <AuthNav />
       </div>
     </header>
   );

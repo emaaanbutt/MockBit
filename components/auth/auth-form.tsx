@@ -1,14 +1,18 @@
 import Link from "next/link";
 import { ArrowRight, LockKeyhole, Mail, Mic2, User } from "lucide-react";
+import { login, signup } from "@/app/auth/actions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 type AuthFormProps = {
   mode: "login" | "signup";
+  error?: string;
+  message?: string;
+  next?: string;
 };
 
-export function AuthForm({ mode }: AuthFormProps) {
+export function AuthForm({ mode, error, message, next = "/history" }: AuthFormProps) {
   const isSignup = mode === "signup";
 
   return (
@@ -36,14 +40,31 @@ export function AuthForm({ mode }: AuthFormProps) {
             {isSignup ? "Create an account to keep your reports and progress." : "Access your saved interviews and reports."}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent>
+          {error ? (
+            <div className="mb-4 rounded-md border border-rose-200/20 bg-rose-300/10 p-3 text-sm text-rose-50">
+              {error}
+            </div>
+          ) : null}
+          {message ? (
+            <div className="mb-4 rounded-md border border-sky-200/20 bg-sky-300/10 p-3 text-sm text-sky-50">
+              {message}
+            </div>
+          ) : null}
+          <form action={isSignup ? signup : login} className="space-y-4">
+            <input type="hidden" name="next" value={next} />
           {isSignup ? (
             <label className="block">
               <span className="mb-2 flex items-center gap-2 text-sm font-medium">
                 <User className="h-4 w-4 text-indigo-200" />
                 Name
               </span>
-              <input className="h-11 w-full rounded-md border border-input bg-slate-950/55 px-3 text-sm outline-none focus:border-indigo-300 focus:ring-2 focus:ring-indigo-300/20" />
+              <input
+                name="name"
+                autoComplete="name"
+                required
+                className="h-11 w-full rounded-md border border-input bg-slate-950/55 px-3 text-sm outline-none focus:border-indigo-300 focus:ring-2 focus:ring-indigo-300/20"
+              />
             </label>
           ) : null}
           <label className="block">
@@ -52,7 +73,10 @@ export function AuthForm({ mode }: AuthFormProps) {
               Email
             </span>
             <input
+              name="email"
               type="email"
+              autoComplete="email"
+              required
               className="h-11 w-full rounded-md border border-input bg-slate-950/55 px-3 text-sm outline-none focus:border-indigo-300 focus:ring-2 focus:ring-indigo-300/20"
             />
           </label>
@@ -62,19 +86,25 @@ export function AuthForm({ mode }: AuthFormProps) {
               Password
             </span>
             <input
+              name="password"
               type="password"
+              autoComplete={isSignup ? "new-password" : "current-password"}
+              required
+              minLength={6}
               className="h-11 w-full rounded-md border border-input bg-slate-950/55 px-3 text-sm outline-none focus:border-indigo-300 focus:ring-2 focus:ring-indigo-300/20"
             />
           </label>
-          <Button asChild className="w-full">
-            <Link href="/history">
+          <Button type="submit" className="w-full">
               {isSignup ? "Create Account" : "Login"}
               <ArrowRight className="h-4 w-4" />
-            </Link>
           </Button>
+          </form>
           <p className="text-center text-sm text-muted-foreground">
             {isSignup ? "Already have an account?" : "New to MockBit?"}{" "}
-            <Link href={isSignup ? "/login" : "/signup"} className="text-indigo-100 hover:text-white">
+            <Link
+              href={`${isSignup ? "/login" : "/signup"}?next=${encodeURIComponent(next)}`}
+              className="text-indigo-100 hover:text-white"
+            >
               {isSignup ? "Login" : "Sign up"}
             </Link>
           </p>

@@ -1,19 +1,17 @@
--- MockBit database draft for PostgreSQL/Supabase.
--- Keep provider API keys outside this database; store only user-owned interview records.
+-- MockBit Supabase PostgreSQL schema draft.
+-- Supabase Auth stores credentials in auth.users. App tables only store product data.
 
-create table app_users (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  email text not null unique,
-  password_hash text,
+create table public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  name text,
   preferred_region text not null default 'remote-south-asia',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
-create table interviews (
+create table public.interviews (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references app_users(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
   role_title text not null,
   company_style text not null,
   job_description text not null,
@@ -28,9 +26,10 @@ create table interviews (
   updated_at timestamptz not null default now()
 );
 
-create table transcript_turns (
+create table public.transcript_turns (
   id uuid primary key default gen_random_uuid(),
-  interview_id uuid not null references interviews(id) on delete cascade,
+  interview_id uuid not null references public.interviews(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
   speaker text not null,
   text text not null,
   confidence numeric(4, 3),
@@ -40,9 +39,10 @@ create table transcript_turns (
   created_at timestamptz not null default now()
 );
 
-create table evaluation_reports (
+create table public.evaluation_reports (
   id uuid primary key default gen_random_uuid(),
-  interview_id uuid not null unique references interviews(id) on delete cascade,
+  interview_id uuid not null unique references public.interviews(id) on delete cascade,
+  user_id uuid not null references auth.users(id) on delete cascade,
   confidence_score integer not null,
   technical_score integer not null,
   delivery_score integer not null,
@@ -54,5 +54,47 @@ create table evaluation_reports (
   created_at timestamptz not null default now()
 );
 
-create index interviews_user_created_idx on interviews(user_id, created_at desc);
-create index transcript_turns_interview_idx on transcript_turns(interview_id, started_at);
+alter table public.profiles enable row level security;
+alter table public.interviews enable row level security;
+alter table public.transcript_turns enable row level security;
+alter table public.evaluation_reports enable row level security;
+
+create policy "Users can read their own profile"
+  on public.profiles for select
+  using (auth.uid() = id);
+
+create policy "Users can update their own profile"
+  on public.profiles for update
+  using (auth.uid() = id);
+
+create policy "Users can read their own interviews"
+  on public.interviews for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert their own interviews"
+  on public.interviews for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can update their own interviews"
+  on public.interviews for update
+  using (auth.uid() = user_id);
+
+create policy "Users can read their own transcript turns"
+  on public.transcript_turns for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert their own transcript turns"
+  on public.transcript_turns for insert
+  with check (auth.uid() = user_id);
+
+create policy "Users can read their own reports"
+  on public.evaluation_reports for select
+  using (auth.uid() = user_id);
+
+create policy "Users can insert their own reports"
+  on public.evaluation_reports for insert
+  with check (auth.uid() = user_id);
+
+create index interviews_user_created_idx on public.interviews(user_id, created_at desc);
+create index transcript_turns_interview_idx on public.transcript_turns(interview_id, started_at);
+create index reports_user_created_idx on public.evaluation_reports(user_id, created_at desc);
