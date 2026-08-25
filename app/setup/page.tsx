@@ -1,14 +1,26 @@
 import { SetupForm } from "@/components/setup/setup-form";
 import { AppShell } from "@/components/app/app-shell";
+import { getCurrentUserInterview } from "@/lib/interviews";
 
-export default function SetupPage() {
+type SetupPageProps = {
+  searchParams: Promise<{
+    interview?: string;
+    error?: string;
+    message?: string;
+  }>;
+};
+
+export default async function SetupPage({ searchParams }: SetupPageProps) {
+  const params = await searchParams;
+  const initialInterview = params.interview ? await getCurrentUserInterview(params.interview) : null;
+
   return (
     <AppShell
       active="setup"
-      title="Add Interview"
-      subtitle="Add the real interview details first. After that, start a tailored practice session for the same role."
+      title={initialInterview ? "Edit Interview" : "Add Interview"}
+      subtitle="Save the real interview details first. After that, start a tailored practice session for the same role."
     >
-      <SetupForm />
+      <SetupForm initialInterview={initialInterview} error={params.error} message={params.message} />
     </AppShell>
   );
 }

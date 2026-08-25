@@ -16,17 +16,17 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "New Interview", href: "/setup", icon: Plus },
+  { label: "Upcoming", href: "/upcoming", icon: CalendarClock },
   { label: "Practice Room", href: "/interview", icon: Mic2 },
   { label: "History", href: "/history", icon: History },
-  { label: "Reports", href: "/report", icon: FileText },
-  { label: "Reminders", href: "/reminders", icon: CalendarClock }
+  { label: "Reports", href: "/report", icon: FileText }
 ];
 
 type AppShellProps = {
   children: React.ReactNode;
   title: string;
   subtitle?: string;
-  active: "dashboard" | "setup" | "interview" | "history" | "report" | "reminders";
+  active: "dashboard" | "setup" | "upcoming" | "interview" | "history" | "report";
   showAddInterview?: boolean;
 };
 

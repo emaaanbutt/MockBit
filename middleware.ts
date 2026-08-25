@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const protectedPrefixes = ["/dashboard", "/setup", "/interview", "/history", "/report", "/reminders"];
+const protectedPrefixes = ["/dashboard", "/setup", "/upcoming", "/interview", "/history", "/report", "/reminders"];
 const authPrefixes = ["/login", "/signup"];
 const protectedApiPrefixes = ["/api/analyze-transcript"];
 

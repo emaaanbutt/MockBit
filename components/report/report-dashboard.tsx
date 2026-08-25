@@ -1,94 +1,62 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, FileSearch, MessageSquareText, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { ChevronDown, FileSearch, MessageSquareText, Mic2, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import type { EvaluationReport } from "@/types/interview";
+import type { SavedInterview } from "@/lib/interviews";
 import { cn } from "@/lib/utils";
 
-const report: EvaluationReport = {
-  id: "report-demo",
-  interviewId: "demo",
-  candidateName: "Candidate",
-  roleTitle: "Frontend Engineer",
-  region: "pakistan",
-  createdAt: new Date().toISOString(),
-  scores: {
-    confidence: {
-      label: "Confidence",
-      score: 82,
-      summary: "You sounded steady and clear, especially when describing ownership and deadlines.",
-      evidence: ["Direct opening answers", "Good recovery after pauses", "Clearer tone in project examples"]
-    },
-    technical: {
-      label: "Technical",
-      score: 76,
-      summary: "Good React and API explanation, but system-design depth needs more structure.",
-      evidence: ["Mentioned caching", "Explained component state", "Missed tradeoffs for SSR vs CSR"]
-    },
-    delivery: {
-      label: "Delivery",
-      score: 88,
-      summary: "Strong pacing with only a few filler words. STAR structure can make answers sharper.",
-      evidence: ["Good pauses", "Low filler count", "Result section sometimes too short"]
-    }
-  },
-  fillerWords: [
-    { word: "basically", count: 4 },
-    { word: "like", count: 6 },
-    { word: "umm", count: 3 }
-  ],
-  nextPracticePlan: [
-    "Prepare two STAR stories for client-pressure and production-bug scenarios.",
-    "Add exact impact numbers: page speed, conversion, ticket reduction, or delivery time saved.",
-    "Practice one local software-house scenario with client communication and changing requirements."
-  ],
-  comparisons: [
-    {
-      id: "c1",
-      question: "Tell me about a frontend project where you handled API integration under pressure.",
-      whatYouSaid:
-        "I integrated APIs in Next.js and handled loading states. There were some deadline issues but I managed them and coordinated with backend.",
-      whatTheyHeard:
-        "You can integrate APIs, but the answer needs clearer stakes, ownership, and measurable result.",
-      localMarketNote:
-        "For local software-house interviews, mention client deadline, backend coordination, and how you handled unclear requirements.",
-      improvedStarAnswer: {
-        situation:
-          "In my final-semester project, our team had to demo a Next.js dashboard while backend endpoints were still changing.",
-        task:
-          "I owned the frontend API layer, loading states, error handling, and making sure the demo did not break during client-style review.",
-        action:
-          "I created typed service functions, mocked unstable responses, added retry and empty states, and synced daily with the backend member.",
-        result:
-          "The demo ran smoothly, the UI handled API delays gracefully, and our team reduced last-minute bugs before submission."
-      }
-    },
-    {
-      id: "c2",
-      question: "How would you optimize a slow Next.js page?",
-      whatYouSaid:
-        "I would check images, lazy load components, and use caching. I would also look at Lighthouse and reduce bundle size.",
-      whatTheyHeard:
-        "Solid checklist, but it needs diagnosis order and reasons behind each optimization.",
-      localMarketNote:
-        "Interviewers often ask this to see practical debugging maturity, not only names of tools.",
-      improvedStarAnswer: {
-        situation: "A product listing page felt slow on mid-range laptops during a stakeholder review.",
-        task: "I had to identify the bottleneck and improve perceived load time without changing the whole architecture.",
-        action:
-          "I profiled the route, optimized images, moved non-critical widgets behind dynamic imports, cached repeated API calls, and tightened loading skeletons.",
-        result: "The page became visibly faster and the review team could navigate without awkward waiting between filters."
-      }
-    }
-  ]
+type ReportDashboardProps = {
+  interview: SavedInterview;
 };
 
-export function ReportDashboard() {
-  const [expandedId, setExpandedId] = useState(report.comparisons[0]?.id);
+export function ReportDashboard({ interview }: ReportDashboardProps) {
+  const report = interview.report;
+  const [expandedId, setExpandedId] = useState(report?.comparisons[0]?.id ?? "");
+
+  if (!report) {
+    return (
+      <Card className="glass-panel animate-slideUp">
+        <CardHeader>
+          <Badge tone="slate">Analysis pending</Badge>
+          <CardTitle className="mt-3 text-2xl">{interview.roleTitle} report is not ready yet.</CardTitle>
+          <CardDescription>
+            The practice session is saved. A feedback report will appear here after transcript analysis is available.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button asChild>
+            <Link href={`/interview/${interview.id}`}>
+              <Mic2 className="h-4 w-4" />
+              Practice Again
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const scores = [
+    {
+      label: "Confidence",
+      score: report.confidenceScore,
+      summary: "Confidence score from the saved evaluation."
+    },
+    {
+      label: "Technical",
+      score: report.technicalScore,
+      summary: "Technical clarity score from the saved evaluation."
+    },
+    {
+      label: "Delivery",
+      score: report.deliveryScore,
+      summary: "Delivery and pacing score from the saved evaluation."
+    }
+  ];
 
   return (
     <div className="space-y-5">
@@ -96,13 +64,13 @@ export function ReportDashboard() {
         <Card className="glass-panel animate-slideUp">
           <CardHeader>
             <Badge tone="blue">Post-interview analytics</Badge>
-            <CardTitle className="mt-3 text-2xl">{report.roleTitle} report</CardTitle>
+            <CardTitle className="mt-3 text-2xl">{interview.roleTitle} report</CardTitle>
             <CardDescription>
               Structured feedback for confidence, technical clarity, delivery, and local interview expectations.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-3">
-            {Object.values(report.scores).map((score) => (
+            {scores.map((score) => (
               <div key={score.label} className="rounded-md border border-white/10 bg-white/[0.035] p-4 transition hover:border-indigo-200/30 hover:bg-white/[0.055]">
                 <div className="flex items-center justify-between gap-3">
                   <p className="font-medium">{score.label}</p>
@@ -121,6 +89,11 @@ export function ReportDashboard() {
             <CardDescription>Quick signals for delivery cleanup.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
+            {report.fillerWords.length === 0 ? (
+              <div className="rounded-md border border-white/10 bg-white/[0.035] p-3 text-sm text-muted-foreground">
+                No filler words were saved for this report.
+              </div>
+            ) : null}
             {report.fillerWords.map((item) => (
               <div key={item.word} className="flex items-center justify-between rounded-md border border-white/10 bg-white/[0.035] p-3 transition hover:border-indigo-200/30 hover:bg-white/[0.055]">
                 <span className="text-sm">{item.word}</span>
@@ -140,6 +113,11 @@ export function ReportDashboard() {
           <CardDescription>Expandable STAR rewrites help convert rough answers into interview-ready stories.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
+          {report.comparisons.length === 0 ? (
+            <div className="rounded-md border border-white/10 bg-white/[0.035] p-4 text-sm leading-6 text-muted-foreground">
+              No answer comparisons were saved for this report.
+            </div>
+          ) : null}
           {report.comparisons.map((comparison) => {
             const expanded = expandedId === comparison.id;
 
@@ -198,6 +176,11 @@ export function ReportDashboard() {
           </div>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-3">
+          {report.nextPracticePlan.length === 0 ? (
+            <div className="rounded-md border border-white/10 bg-white/[0.035] p-4 text-sm leading-6 text-muted-foreground">
+              No next practice plan was saved for this report.
+            </div>
+          ) : null}
           {report.nextPracticePlan.map((item) => (
             <div key={item} className="rounded-md border border-white/10 bg-white/[0.035] p-4 text-sm leading-6 text-slate-300 transition hover:border-indigo-200/30 hover:bg-white/[0.055]">
               {item}

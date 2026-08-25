@@ -78,3 +78,5 @@ export type TranscriptTurn = z.infer<typeof TranscriptTurnSchema>;
 export type AudioSession = z.infer<typeof AudioSessionSchema>;
 export type EvaluationReport = z.infer<typeof EvaluationReportSchema>;
 export type InterviewHistoryItem = z.infer<typeof InterviewHistoryItemSchema>;
+export type HeardComparison = z.infer<typeof HeardComparisonSchema>;
+export type StarAnswer = z.infer<typeof StarAnswerSchema>;

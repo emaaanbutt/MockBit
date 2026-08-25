@@ -3,14 +3,15 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Bot, Clock3, MessageCircle, Mic, MicOff, PhoneOff, Send, Volume2, X } from "lucide-react";
+import { finishInterview } from "@/app/interview/actions";
 import { AudioWaveform } from "@/components/interview/audio-waveform";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { upcomingInterviews } from "@/lib/dashboard-data";
+import type { SavedInterview } from "@/lib/interviews";
 
 type InterviewConsoleProps = {
-  interview: (typeof upcomingInterviews)[number];
+  interview: SavedInterview;
 };
 
 export function InterviewConsole({ interview }: InterviewConsoleProps) {
@@ -53,9 +54,9 @@ export function InterviewConsole({ interview }: InterviewConsoleProps) {
               <Badge tone={status === "muted" ? "rose" : status === "ai-speaking" ? "blue" : "indigo"}>
                 {!started ? "Ready when you are" : status === "muted" ? "Muted" : status === "ai-speaking" ? "AI Speaking..." : "Listening..."}
               </Badge>
-              <CardTitle className="mt-4 text-2xl">{interview.role} practice</CardTitle>
+              <CardTitle className="mt-4 text-2xl">{interview.roleTitle} practice</CardTitle>
               <CardDescription>
-                Tailored for {interview.company}. Start the session only when you are ready to answer out loud.
+                Tailored for {interview.companyName ?? "this saved interview"}. Start the session only when you are ready to answer out loud.
               </CardDescription>
             </div>
             <div className="w-full rounded-md border border-white/10 bg-white/[0.04] px-4 py-3 text-left sm:w-auto sm:text-right">
@@ -96,12 +97,14 @@ export function InterviewConsole({ interview }: InterviewConsoleProps) {
                 {muted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                 {muted ? "Unmute" : "Mute"}
               </Button>
-              <Button asChild variant="outline" className={!started ? "pointer-events-none opacity-50" : ""}>
-                <Link href="/report/demo">
+              <form action={finishInterview}>
+                <input type="hidden" name="id" value={interview.id} />
+                <input type="hidden" name="durationSeconds" value={seconds} />
+                <Button type="submit" variant="outline" disabled={!started} className="w-full">
                   <PhoneOff className="h-4 w-4" />
-                  End and Analyze
-                </Link>
-              </Button>
+                  End and Save
+                </Button>
+              </form>
             </div>
           </CardContent>
         </Card>
@@ -131,15 +134,25 @@ export function InterviewConsole({ interview }: InterviewConsoleProps) {
           <CardContent className="space-y-3 text-sm">
             <div className="rounded-md border border-white/10 bg-white/[0.035] p-3">
               <p className="text-muted-foreground">Company</p>
-              <p className="mt-1 font-medium">{interview.company}</p>
+              <p className="mt-1 font-medium">{interview.companyName ?? "No company added"}</p>
             </div>
             <div className="rounded-md border border-white/10 bg-white/[0.035] p-3">
               <p className="text-muted-foreground">Role focus</p>
-              <p className="mt-1 leading-6">{interview.description}</p>
+              <p className="mt-1 leading-6">{interview.jobDescription}</p>
             </div>
             <div className="rounded-md border border-white/10 bg-white/[0.035] p-3">
               <p className="text-muted-foreground">Schedule</p>
-              <p className="mt-1 font-medium">{interview.date} at {interview.time}</p>
+              <p className="mt-1 font-medium">
+                {interview.scheduledAt
+                  ? new Date(interview.scheduledAt).toLocaleString("en", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                      hour: "numeric",
+                      minute: "2-digit"
+                    })
+                  : "No schedule added"}
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -162,7 +175,7 @@ export function InterviewConsole({ interview }: InterviewConsoleProps) {
                 <h2 className="font-semibold">Interview helper</h2>
               </div>
               <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                Ask about {interview.role}, the JD, likely questions, or topics to revise before this session.
+                Ask about {interview.roleTitle}, the JD, likely questions, or topics to revise before this session.
               </p>
             </div>
             <button onClick={() => setChatOpen(false)} aria-label="Close helper">

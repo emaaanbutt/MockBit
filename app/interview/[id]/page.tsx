@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/app/app-shell";
 import { InterviewConsole } from "@/components/interview/interview-console";
-import { upcomingInterviews } from "@/lib/dashboard-data";
+import { getCurrentUserInterview } from "@/lib/interviews";
 
 type InterviewRoomPageProps = {
   params: Promise<{ id: string }>;
@@ -9,7 +9,7 @@ type InterviewRoomPageProps = {
 
 export default async function InterviewRoomPage({ params }: InterviewRoomPageProps) {
   const { id } = await params;
-  const interview = upcomingInterviews.find((item) => item.id === id);
+  const interview = await getCurrentUserInterview(id);
 
   if (!interview) {
     notFound();
@@ -19,7 +19,7 @@ export default async function InterviewRoomPage({ params }: InterviewRoomPagePro
     <AppShell
       active="interview"
       title="Practice Room"
-      subtitle={`${interview.role} at ${interview.company}. Start when you are ready.`}
+      subtitle={`${interview.roleTitle} at ${interview.companyName ?? "your saved interview"}. Start when you are ready.`}
     >
       <InterviewConsole interview={interview} />
     </AppShell>
