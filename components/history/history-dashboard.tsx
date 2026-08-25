@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { PendingSubmitButton } from "@/components/shared/pending-submit-button";
 import { formatDuration, getPracticedInterviews, type SavedInterview } from "@/lib/interviews";
 
 type HistoryDashboardProps = {
@@ -16,7 +17,7 @@ export function HistoryDashboard({ interviews, message }: HistoryDashboardProps)
   const practiced = getPracticedInterviews(interviews);
   const reports = interviews.flatMap((item) => (item.report ? [item.report] : []));
   const average =
-    reports.length > 0 ? Math.round(reports.reduce((sum, item) => sum + item.averageScore, 0) / reports.length) : "No score";
+    reports.length > 0 ? Math.round(reports.reduce((sum, item) => sum + item.averageScore, 0) / reports.length) : 0;
 
   return (
     <div className="space-y-5">
@@ -125,6 +126,11 @@ export function HistoryDashboard({ interviews, message }: HistoryDashboardProps)
               <div className="lg:col-span-4">
                 <div className="flex flex-wrap gap-2">
                   <Button asChild variant="outline" size="sm">
+                    <Link href={`/interview/${item.id}/preview?back=${encodeURIComponent("/history")}`}>
+                      Details
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" size="sm">
                     <Link href={`/setup?interview=${item.id}`}>
                       <Edit3 className="h-4 w-4" />
                       Edit
@@ -138,10 +144,10 @@ export function HistoryDashboard({ interviews, message }: HistoryDashboardProps)
                   <form action={deleteInterview}>
                     <input type="hidden" name="id" value={item.id} />
                     <input type="hidden" name="next" value="/history" />
-                    <Button type="submit" variant="danger" size="sm">
+                    <PendingSubmitButton type="submit" variant="danger" size="sm" pendingLabel="Deleting...">
                       <Trash2 className="h-4 w-4" />
                       Delete
-                    </Button>
+                    </PendingSubmitButton>
                   </form>
                 </div>
               </div>

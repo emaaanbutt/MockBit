@@ -8,6 +8,7 @@ import { AudioWaveform } from "@/components/interview/audio-waveform";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PendingSubmitButton } from "@/components/shared/pending-submit-button";
 import type { SavedInterview } from "@/lib/interviews";
 
 type InterviewConsoleProps = {
@@ -100,10 +101,10 @@ export function InterviewConsole({ interview }: InterviewConsoleProps) {
               <form action={finishInterview}>
                 <input type="hidden" name="id" value={interview.id} />
                 <input type="hidden" name="durationSeconds" value={seconds} />
-                <Button type="submit" variant="outline" disabled={!started} className="w-full">
+                <PendingSubmitButton type="submit" variant="outline" disabled={!started} className="w-full" pendingLabel="Saving...">
                   <PhoneOff className="h-4 w-4" />
                   End and Save
-                </Button>
+                </PendingSubmitButton>
               </form>
             </div>
           </CardContent>
@@ -138,7 +139,7 @@ export function InterviewConsole({ interview }: InterviewConsoleProps) {
             </div>
             <div className="rounded-md border border-white/10 bg-white/[0.035] p-3">
               <p className="text-muted-foreground">Role focus</p>
-              <p className="mt-1 leading-6">{interview.jobDescription}</p>
+              <p className="mt-1 line-clamp-2 leading-6">{interview.jobDescription}</p>
             </div>
             <div className="rounded-md border border-white/10 bg-white/[0.035] p-3">
               <p className="text-muted-foreground">Schedule</p>
@@ -154,6 +155,11 @@ export function InterviewConsole({ interview }: InterviewConsoleProps) {
                   : "No schedule added"}
               </p>
             </div>
+            <Button asChild variant="outline" className="w-full">
+              <Link href={`/interview/${interview.id}/preview?back=${encodeURIComponent(`/interview/${interview.id}`)}`}>
+                View Full Details
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       </aside>

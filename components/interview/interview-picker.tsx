@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { PendingSubmitButton } from "@/components/shared/pending-submit-button";
 import {
   formatInterviewDate,
   formatInterviewTime,
@@ -60,9 +61,14 @@ export function InterviewPicker({ interviews }: InterviewPickerProps) {
                 <Badge tone="blue">{formatInterviewTime(item.scheduledAt)}</Badge>
                 <Badge>{item.interviewMode ?? "Mode not added"}</Badge>
               </div>
-              <h2 className="mt-3 text-xl font-semibold">{item.roleTitle}</h2>
+              <Link
+                href={`/interview/${item.id}/preview?back=${encodeURIComponent("/interview")}`}
+                className="mt-3 block text-xl font-semibold transition hover:text-indigo-100"
+              >
+                {item.roleTitle}
+              </Link>
               <p className="mt-1 text-sm text-muted-foreground">{item.companyName ?? "No company added"}</p>
-              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300">{item.jobDescription}</p>
+              <p className="mt-3 line-clamp-2 max-w-3xl text-sm leading-6 text-slate-300">{item.jobDescription}</p>
               <div className="mt-4 max-w-xl">
                 <div className="mb-2 flex justify-between text-xs text-muted-foreground">
                   <span>Prep readiness</span>
@@ -72,6 +78,11 @@ export function InterviewPicker({ interviews }: InterviewPickerProps) {
               </div>
             </div>
             <div className="flex flex-col gap-2 lg:items-stretch">
+              <Button asChild variant="outline">
+                <Link href={`/interview/${item.id}/preview?back=${encodeURIComponent("/interview")}`}>
+                  Details
+                </Link>
+              </Button>
               {item.meetingLink ? (
                 <Button asChild variant="outline">
                   <Link href={item.meetingLink} target="_blank" rel="noreferrer">
@@ -100,10 +111,10 @@ export function InterviewPicker({ interviews }: InterviewPickerProps) {
               <form action={deleteInterview}>
                 <input type="hidden" name="id" value={item.id} />
                 <input type="hidden" name="next" value="/interview" />
-                <Button type="submit" variant="danger" className="w-full">
+                <PendingSubmitButton type="submit" variant="danger" className="w-full" pendingLabel="Deleting...">
                   <Trash2 className="h-4 w-4" />
                   Delete
-                </Button>
+                </PendingSubmitButton>
               </form>
             </div>
           </CardContent>

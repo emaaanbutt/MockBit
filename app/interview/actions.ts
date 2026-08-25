@@ -140,7 +140,7 @@ export async function saveInterview(formData: FormData) {
     redirect(`/interview/${savedId}`);
   }
 
-  redirect("/dashboard?message=Interview saved.");
+  redirect("/upcoming?message=Interview saved.");
 }
 
 export async function deleteInterview(formData: FormData) {

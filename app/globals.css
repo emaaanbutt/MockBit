@@ -75,6 +75,29 @@ body {
   background-size: 240% 100%;
 }
 
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.animate-progressSlide {
+  animation: progressSlide 1.1s ease-in-out infinite;
+}
+
+@keyframes progressSlide {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(70%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
 .floating-strip {
   @apply pointer-events-none absolute rounded-md border border-white/10 bg-white/[0.045] backdrop-blur-md;
 }

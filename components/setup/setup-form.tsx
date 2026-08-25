@@ -12,9 +12,9 @@ import {
   SlidersHorizontal
 } from "lucide-react";
 import { saveInterview } from "@/app/interview/actions";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormPendingBar, PendingSubmitButton } from "@/components/shared/pending-submit-button";
 import type { SavedInterview } from "@/lib/interviews";
 
 const scenarios = [
@@ -274,14 +274,16 @@ export function SetupForm({ initialInterview, error, message }: SetupFormProps) 
             />
           </label>
 
+          <FormPendingBar />
+
           <div className="flex flex-wrap gap-3">
-            <Button type="submit" name="intent" value="practice" size="lg">
+            <PendingSubmitButton type="submit" name="intent" value="practice" size="lg" pendingLabel="Saving...">
               Save and Practice
               <ArrowRight className="h-4 w-4" />
-            </Button>
-            <Button type="submit" name="intent" value="save" variant="outline" size="lg">
+            </PendingSubmitButton>
+            <PendingSubmitButton type="submit" name="intent" value="save" variant="outline" size="lg" pendingLabel="Saving...">
               Save for Later
-            </Button>
+            </PendingSubmitButton>
           </div>
         </CardContent>
         </Card>

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { PendingSubmitButton } from "@/components/shared/pending-submit-button";
 import {
   formatInterviewDate,
   formatInterviewTime,
@@ -26,7 +27,7 @@ export function DashboardHome({ interviews, message }: DashboardHomeProps) {
   const averageScore =
     reports.length > 0
       ? Math.round(reports.reduce((sum, item) => sum + item.averageScore, 0) / reports.length).toString()
-      : "No score";
+      : "0";
   const nextInterview = upcoming[0]?.scheduledAt
     ? `${formatInterviewDate(upcoming[0].scheduledAt)} at ${formatInterviewTime(upcoming[0].scheduledAt)}`
     : "Nothing scheduled";
@@ -153,10 +154,21 @@ export function DashboardHome({ interviews, message }: DashboardHomeProps) {
                       <Badge tone="blue">{formatInterviewTime(item.scheduledAt)}</Badge>
                       <Badge>{item.interviewMode ?? "Mode not added"}</Badge>
                     </div>
-                    <h2 className="mt-3 text-lg font-semibold">{item.roleTitle}</h2>
+                    <Link
+                      href={`/interview/${item.id}/preview?back=${encodeURIComponent("/dashboard")}`}
+                      className="mt-3 block text-lg font-semibold transition hover:text-indigo-100"
+                    >
+                      {item.roleTitle}
+                    </Link>
                     <p className="text-sm text-muted-foreground">{item.companyName ?? "No company added"}</p>
+                    <p className="mt-2 line-clamp-2 max-w-3xl text-sm leading-6 text-slate-300">{item.jobDescription}</p>
                   </div>
                   <div className="flex flex-wrap justify-start gap-2 lg:justify-end">
+                    <Button asChild variant="outline" size="sm">
+                      <Link href={`/interview/${item.id}/preview?back=${encodeURIComponent("/dashboard")}`}>
+                        Details
+                      </Link>
+                    </Button>
                     {item.meetingLink ? (
                       <Button asChild variant="outline" size="sm">
                         <Link href={item.meetingLink} target="_blank" rel="noreferrer">
@@ -180,10 +192,10 @@ export function DashboardHome({ interviews, message }: DashboardHomeProps) {
                     <form action={deleteInterview}>
                       <input type="hidden" name="id" value={item.id} />
                       <input type="hidden" name="next" value="/dashboard" />
-                      <Button type="submit" variant="danger" size="sm">
+                      <PendingSubmitButton type="submit" variant="danger" size="sm" pendingLabel="Deleting...">
                         <Trash2 className="h-4 w-4" />
                         Delete
-                      </Button>
+                      </PendingSubmitButton>
                     </form>
                   </div>
                 </div>
